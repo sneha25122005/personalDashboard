@@ -8,5 +8,10 @@ export type DailyLog = {
   energy: number; // 1-5
   note: string;
   sleepHours: number; // hours of sleep for that night
+
+  // Optional daily summary fields
+  tasksTotal?: number;
+  tasksCompleted?: number;
+  resourcesCount?: number;
 };
 

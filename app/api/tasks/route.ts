@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getTasks, saveTasks, type TaskItem } from "@/services/database";
+import {
+  getTasks,
+  saveTasks,
+  type TaskItem,
+  updateDailyLog,
+} from "@/services/database";
 
 export const runtime = "nodejs";
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 export async function GET() {
   const tasks = await getTasks();
@@ -20,6 +29,15 @@ export async function POST(req: NextRequest) {
   }
 
   await saveTasks(body);
+
+  const tasksTotal = body.length;
+  const tasksCompleted = body.filter((t) => t.category === "completed").length;
+
+  await updateDailyLog(todayISO(), {
+    tasksTotal,
+    tasksCompleted,
+  });
+
   return NextResponse.json({ ok: true });
 }
 

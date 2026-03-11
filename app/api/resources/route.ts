@@ -4,9 +4,14 @@ import {
   getResources,
   saveResources,
   type ResourceItem,
+  updateDailyLog,
 } from "@/services/database";
 
 export const runtime = "nodejs";
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 export async function GET() {
   const items = await getResources();
@@ -24,6 +29,11 @@ export async function POST(req: NextRequest) {
   }
 
   await saveResources(body);
+
+  await updateDailyLog(todayISO(), {
+    resourcesCount: body.length,
+  });
+
   return NextResponse.json({ ok: true });
 }
 

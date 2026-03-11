@@ -52,6 +52,38 @@ export async function saveDailyLog(entry: DailyLog): Promise<void> {
   await writeJson(DAILY_FILE, all);
 }
 
+// Merge helper for partial updates (e.g. summaries)
+export async function updateDailyLog(
+  date: string,
+  patch: Partial<DailyLog>,
+): Promise<DailyLog> {
+  const all = await getDailyLogs();
+  const index = all.findIndex((log) => log.date === date);
+
+  let merged: DailyLog;
+  if (index >= 0) {
+    merged = { ...all[index], ...patch, date };
+    all[index] = merged;
+  } else {
+    // If no entry exists yet, create one with safe defaults
+    merged = {
+      date,
+      mood: patch.mood ?? 3,
+      stress: patch.stress ?? 3,
+      energy: patch.energy ?? 3,
+      note: patch.note ?? "",
+      sleepHours: patch.sleepHours ?? 0,
+      tasksTotal: patch.tasksTotal,
+      tasksCompleted: patch.tasksCompleted,
+      resourcesCount: patch.resourcesCount,
+    };
+    all.push(merged);
+  }
+
+  await writeJson(DAILY_FILE, all);
+  return merged;
+}
+
 // ---- Tasks ----
 
 export type TaskItem = {

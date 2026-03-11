@@ -102,6 +102,11 @@ export default function TasksPage() {
     </AnimatePresence>
   );
 
+  const todayCount = tasks.filter((t) => t.category === "today").length;
+  const upcomingCount = tasks.filter((t) => t.category === "upcoming").length;
+  const completedCount = tasks.filter((t) => t.category === "completed").length;
+  const totalCount = tasks.length;
+
   return (
     <motion.div
       className="space-y-8"
@@ -116,6 +121,33 @@ export default function TasksPage() {
           completed tasks.
         </p>
       </header>
+
+      <div className="grid gap-3 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-4 text-xs text-neutral-300 sm:grid-cols-4">
+        <div>
+          <p className="text-neutral-400">Today</p>
+          <p className="mt-1 text-lg font-semibold text-neutral-50">
+            {todayCount}
+          </p>
+        </div>
+        <div>
+          <p className="text-neutral-400">Upcoming</p>
+          <p className="mt-1 text-lg font-semibold text-neutral-50">
+            {upcomingCount}
+          </p>
+        </div>
+        <div>
+          <p className="text-neutral-400">Completed</p>
+          <p className="mt-1 text-lg font-semibold text-neutral-50">
+            {completedCount}
+          </p>
+        </div>
+        <div>
+          <p className="text-neutral-400">Total tasks</p>
+          <p className="mt-1 text-lg font-semibold text-neutral-50">
+            {totalCount}
+          </p>
+        </div>
+      </div>
 
       <motion.div
         className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-4"
